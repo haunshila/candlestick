@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebAssembly Candlestick Pattern Detector</title>
+  <script type="module">
+    import init, {detect_patterns} from './pkg/candlestick.js';
+
+    async function run() {
+      await init(); // Initialize the WebAssembly module
+
+      document.getElementById('uploadButton').onclick = async () => {
+        const fileInput = document.getElementById('csvFile');
+        const file = fileInput.files[0];
+
+        if (!file) {
+          alert("Please select a CSV file.");
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          const csvData = reader.result;
+          document.getElementById('result').innerText = detect_patterns(csvData);
+        };
+        reader.readAsText(file);
+      };
+    }
+
+    run(); // Start the application
+  </script>
+</head>
+<body>
+<h1>WebAssembly Candlestick Pattern Detector</h1>
+<input type="file" id="csvFile" accept=".csv">
+<button id="uploadButton">Detect Patterns</button>
+<pre id="result" style="white-space: pre;"></pre>
+</body>
+</html>
